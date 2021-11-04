@@ -1,5 +1,6 @@
 package com.mycomp
 
+import java.util.Properties
 import org.apache.spark.sql.{SaveMode,SparkSession}
 
 /**
@@ -12,6 +13,8 @@ object Scala_Spark_Hive {
         // POM > https://mvnrepository.com/artifact/org.apache.spark/spark-core
         // POM > https://mvnrepository.com/artifact/org.apache.spark/spark-sql
         // POM > https://mvnrepository.com/artifact/org.apache.spark/spark-hive (<scope>compile</scope>)
+        // POM > https://mvnrepository.com/artifact/org.postgresql/postgresql
+
 
         // Set Hadoop Home Directory
         System.setProperty("hadoop.home.dir","")
@@ -31,7 +34,24 @@ object Scala_Spark_Hive {
 
         val df = spark.createDataFrame(sampleSeq).toDF(colNames = "course id", "course name")
         df.show()
-        df.write.format(source="csv").mode(SaveMode.Overwrite).save(path="samplesq")
+        //df.write.format(source="csv").mode(SaveMode.Overwrite).save(path="samplesq")
+
+        // Connect to PostgreSQL
+        // Checkout 'README_SETUP_POSTGRES.md' to setup the database properly
+        println("Create Dataframe from Postgres DB ...")
+
+        val pgConnectionProperties = new Properties()
+        pgConnectionProperties.put("user","root")
+        pgConnectionProperties.put("password","root")
+
+        val pgTable = "newschema.course_catalog"
+
+        val pgCrouseDataframe = spark.read.jdbc(url="jdbc:postgresql://localhost:5432/newdb",pgTable,pgConnectionProperties)
+
+        println("Fetched table ...")
+
+        pgCrouseDataframe.show()
+
   }
 
 }

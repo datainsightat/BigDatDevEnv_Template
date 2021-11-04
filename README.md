@@ -9,6 +9,8 @@ Source: https://stackoverflow.com/questions/6758258/running-a-maven-scala-projec
             artifactId: 01_scala_basics_maven
             version: 1.0-SNAPSHOT
 
+        $ cd 01_scala_basics_maven
+
         Edit pom.xml:
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

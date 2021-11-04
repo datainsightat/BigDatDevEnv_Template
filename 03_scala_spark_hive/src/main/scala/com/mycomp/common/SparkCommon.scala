@@ -7,31 +7,38 @@ object SparkCommon {
 
     private val logger = LoggerFactory.getLogger(getClass.getName)
 
-    def createSparkSession(): SparkSession = {
+    def createSparkSession(): Option[SparkSession] = {
 
-        logger.info("createSparkSession started ...")
-        
-        // Set Hadoop Home Directory
-        System.setProperty("hadoop.home.dir","")
-        //.config("spark.sql.warehouse.dir",warehouseLocation).enableHiveSupport()
+        try {
 
-        // Create Spark Session
-        val spark = SparkSession
-            .builder
-            .appName(name="HelloSpark")
-            .config("spark.master","local")
-            .enableHiveSupport()
-            .getOrCreate()
+            logger.info("createSparkSession started ...")
+            
+            // Set Hadoop Home Directory
+            System.setProperty("hadoop.home.dir","")
+            //.config("spark.sql.warehouse.dir",warehouseLocation).enableHiveSupport()
 
-        logger.info("createSparkSession ended ...")
+            // Create Spark Session
+            val spark = SparkSession
+                .builder
+                .appName(name="HelloSpark")
+                .config("spark.master","local")
+                .enableHiveSupport()
+                .getOrCreate()
 
-        spark
-        //println("Created Spark Session ...")
+            logger.info("createSparkSession ended ...")
 
-        //val sampleSeq = Seq((1,"spark"),(2,"big data"))
+            Some(spark)
 
-        //val df = spark.createDataFrame(sampleSeq).toDF(colNames = "course id", "course name")
-        //df.show()
-        //df.write.format(source="csv").mode(SaveMode.Overwrite).save(path="samplesq")
+        } catch {
+
+            case e:Exception =>
+                logger.error("An error has occured in the createSparkSession method" + e.printStackTrace())
+                System.exit(1)
+                None
+
+        }
+
+
+
     }
 }

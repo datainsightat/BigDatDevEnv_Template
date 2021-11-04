@@ -31,15 +31,26 @@ object PostgresCommon {
         pgURL
     }
 
-    def fetchDataFrameFromPgTable(spark : SparkSession, pgTable : String) : DataFrame = {
+    def fetchDataFrameFromPgTable(spark : SparkSession, pgTable : String) : Option[DataFrame] = {
 
-        logger.info("fetchDataFrameFromPgTable started ...")
+        try {
 
-        // This connection requires an active postgresql container named 'pg_container'
-        val pgCourseDataframe = spark.read.jdbc(url=getPostgresServerDatabase(),pgTable,getPostgresCommonProps())
+            logger.info("fetchDataFrameFromPgTable started ...")
 
-        logger.info("fetchDataFrameFromPgTable ended ...")
+            // This connection requires an active postgresql container named 'pg_container'
+            val pgCourseDataframe = spark.read.jdbc(url=getPostgresServerDatabase(),pgTable,getPostgresCommonProps())
 
-        pgCourseDataframe
+            logger.info("fetchDataFrameFromPgTable ended ...")
+
+            Some(pgCourseDataframe)
+
+        } catch {
+
+            case e:Exception =>
+                logger.error("An error has occured in the fetchDataFrameFromPgTable method" + e.printStackTrace())
+                System.exit(1)
+                None
+        }
+
     }
 }

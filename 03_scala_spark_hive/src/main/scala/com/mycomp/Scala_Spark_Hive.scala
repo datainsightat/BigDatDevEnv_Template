@@ -21,17 +21,26 @@ object Scala_Spark_Hive {
   
     def main(args: Array[String]): Unit = {
 
-        logger.info("main method started ...")
+        try{
 
-        val spark : SparkSession = SparkCommon.createSparkSession()
+            logger.info("main method started ...")
 
-        val pgTable = "newschema.course_catalog"
+            val spark : SparkSession = SparkCommon.createSparkSession().get
 
-        val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgTable)
+            val pgTable = "newschema.course_catalog"
 
-        logger.info("main method ended ...")
-        
-        pgCourseDataframe.show()
+            val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgTable).get
+
+            logger.info("main method ended ...")
+            
+            pgCourseDataframe.show()
+
+        } catch {
+
+            case e:Exception =>
+                logger.error("An error has occured in the main method" + e.printStackTrace())
+
+        }
 
     }
 

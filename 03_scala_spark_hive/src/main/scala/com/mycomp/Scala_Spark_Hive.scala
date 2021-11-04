@@ -46,7 +46,7 @@ object Scala_Spark_Hive {
 
         val pgTable = "newschema.course_catalog"
 
-        val pgCrouseDataframe = spark.read.jdbc(url="jdbc:postgresql://localhost:5432/newdb",pgTable,pgConnectionProperties)
+        val pgCrouseDataframe = spark.read.jdbc(url="jdbc:postgresql://pg_container:5432/newdb",pgTable,pgConnectionProperties)
 
         println("Fetched table ...")
 

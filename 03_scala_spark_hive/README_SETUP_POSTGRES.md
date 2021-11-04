@@ -5,7 +5,7 @@
 [PGAdmin](http://localhost:5050/)
 
     General:
-        Name: test_db
+        Name: newserver
     Connection:
         Host_Name: pg_container
         Port: 5432

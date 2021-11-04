@@ -1,11 +1,15 @@
 package common
 
 import org.apache.spark.sql.SparkSession
+import org.slf4j.LoggerFactory
 
 object SparkCommon {
-  def createSparkSession(): SparkSession = {
 
-        println("createSparkSession started ...")
+    private val logger = LoggerFactory.getLogger(getClass.getName)
+
+    def createSparkSession(): SparkSession = {
+
+        logger.info("createSparkSession started ...")
         
         // Set Hadoop Home Directory
         System.setProperty("hadoop.home.dir","")
@@ -19,7 +23,7 @@ object SparkCommon {
             .enableHiveSupport()
             .getOrCreate()
 
-        println("createSparkSession ended ...")
+        logger.info("createSparkSession ended ...")
 
         spark
         //println("Created Spark Session ...")
@@ -29,5 +33,5 @@ object SparkCommon {
         //val df = spark.createDataFrame(sampleSeq).toDF(colNames = "course id", "course name")
         //df.show()
         //df.write.format(source="csv").mode(SaveMode.Overwrite).save(path="samplesq")
-  }
+    }
 }

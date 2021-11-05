@@ -25,7 +25,7 @@ object Scala_Spark_Hive {
 
             logger.info("main method started ...")
 
-            val spark : SparkSession = SparkCommon.createSparkSession().get
+            val spark : SparkSession = SparkCommon.createSparkSession(true).get
 
             val pgTable = "newschema.course_catalog"
 

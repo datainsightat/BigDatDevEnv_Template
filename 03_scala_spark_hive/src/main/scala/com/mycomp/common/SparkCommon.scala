@@ -7,7 +7,7 @@ object SparkCommon {
 
     private val logger = LoggerFactory.getLogger(getClass.getName)
 
-    def createSparkSession(): Option[SparkSession] = {
+    def createSparkSession(sparkLocal : Boolean): Option[SparkSession] = {
 
         try {
 
@@ -18,12 +18,28 @@ object SparkCommon {
             //.config("spark.sql.warehouse.dir",warehouseLocation).enableHiveSupport()
 
             // Create Spark Session
-            val spark = SparkSession
-                .builder
-                .appName(name="HelloSpark")
-                .config("spark.master","local")
-                .enableHiveSupport()
-                .getOrCreate()
+            // if (sparkLocal) {
+                logger.info("Local Session ...")
+                val spark = SparkSession
+                    .builder
+                    .appName(name="HelloSpark")
+                    .config("spark.master","local")
+                    .enableHiveSupport()
+                    .getOrCreate()
+
+            // } else {
+                // logger.info("Cluster Session ...")
+                // val spark = SparkSession
+                //     .builder
+                //     .appName(name="HelloSpark")
+                //     .master("spark://spark-master:7077")
+                //     .config("spark.executor.memory", "512m")
+                //     // .config("spark.cores.max", "4")
+                //     // .config("spark.submit.deployMode","cluster")
+                //     // .config("spark.driver.host", "theia")
+                //     //.enableHiveSupport()
+                //     .getOrCreate()
+            // }
 
             logger.info("createSparkSession ended ...")
 

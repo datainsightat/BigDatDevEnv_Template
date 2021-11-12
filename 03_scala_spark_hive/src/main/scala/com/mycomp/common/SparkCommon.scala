@@ -30,11 +30,14 @@ object SparkCommon {
             // } else {
                 // logger.info("Cluster Session ...")
                 // val spark = SparkSession
-                //     .builder
+                //     .builder()
                 //     .appName(name="HelloSpark")
                 //     .master("spark://spark-master:7077")
+                //     //.config("spark://spark-master:7077","local")
                 //     .config("spark.executor.memory", "512m")
-                //     // .config("spark.cores.max", "4")
+                //     .config("spark.cores.max", "1")
+                //     // .config("spark.dynamicAllocation.enabled","false")
+                //     // .config("spark.shuffle.service.enabled","false")
                 //     // .config("spark.submit.deployMode","cluster")
                 //     // .config("spark.driver.host", "theia")
                 //     //.enableHiveSupport()

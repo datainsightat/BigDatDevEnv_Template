@@ -27,7 +27,7 @@ object Scala_Spark_Hive {
 
             val spark : SparkSession = SparkCommon.createSparkSession(true).get
 
-            val pgTable = "newschema.course_catalog"
+            val pgTable = "newschema.newtable"
 
             val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgTable).get
 

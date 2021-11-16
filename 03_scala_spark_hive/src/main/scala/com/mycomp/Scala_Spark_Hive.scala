@@ -42,7 +42,7 @@ object Scala_Spark_Hive {
             val spark = SparkCommon.createSparkSession(inputConfig).get
 
             //Create hive table
-            //SparkCommon.createHiveTable(spark)
+            SparkCommon.createHiveTable(spark)
 
             //Read hive table
             val courseDF = SparkCommon.readHiveTable(spark).get

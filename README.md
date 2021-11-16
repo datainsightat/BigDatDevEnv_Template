@@ -57,4 +57,4 @@ Source: https://stackoverflow.com/questions/6758258/running-a-maven-scala-projec
 
 Execute Project with Arguments:
 
-    $ mvn package exec:java -Dexec.args="env hive"
+    $ mvn package exec:java -Dexec.args="dev|prod hive|pg"

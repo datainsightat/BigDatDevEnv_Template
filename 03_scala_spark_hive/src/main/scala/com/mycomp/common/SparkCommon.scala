@@ -36,6 +36,9 @@ object SparkCommon {
 
                 logger.warn("Cluster Session ...")
 
+                System.setProperty("hadoop.home.dir","hdfs://hive:54310")
+                //.config("spark.sql.warehouse.dir",warehouseLocation).enableHiveSupport()
+
                 var spark = SparkSession
                     .builder()
                     .appName(name="HelloSpark")
@@ -43,12 +46,12 @@ object SparkCommon {
                     //.config("spark://spark-master:7077","local")
                     .config("spark.executor.memory", "512m")
                     .config("spark.cores.max", "1")
-                    //.config("spark.sql.warehouse.dir","/user/hive/warehouse")
+                    .config("spark.sql.warehouse.dir","/user/hive/warehouse")
                     .config("spark.dynamicAllocation.enabled","false")
                     //.config("spark.shuffle.service.enabled","false")
                     .config("spark.submit.deployMode","cluster")
                     //.config("spark.driver.host", "theia")
-                    //.enableHiveSupport()
+                    .enableHiveSupport()
                     .getOrCreate()
 
                 Some(spark)

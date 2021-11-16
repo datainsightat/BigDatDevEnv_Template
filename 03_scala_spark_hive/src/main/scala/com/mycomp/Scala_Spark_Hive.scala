@@ -44,6 +44,8 @@ object Scala_Spark_Hive {
 
             logger.warn("**** pgCourseTable *** is ", pgCourseTable)
 
+            PostgresCommon.writeDFToPostgresTable(transformedDF1,pgCourseTable)
+
             // val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgCourseTable).get
 
             // logger.warn("main method ended ...")

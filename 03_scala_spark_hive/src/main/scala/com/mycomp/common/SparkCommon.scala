@@ -11,7 +11,7 @@ object SparkCommon {
 
         try {
 
-            logger.info("createSparkSession started ...")
+            logger.warn("createSparkSession started ...")
             
             // Set Hadoop Home Directory
             System.setProperty("hadoop.home.dir","")
@@ -19,7 +19,7 @@ object SparkCommon {
 
             // Create Spark Session
             // if (sparkLocal) {
-                logger.info("Local Session ...")
+                logger.warn("Local Session ...")
                 val spark = SparkSession
                     .builder
                     .appName(name="HelloSpark")
@@ -28,7 +28,7 @@ object SparkCommon {
                     .getOrCreate()
 
             // } else {
-                // logger.info("Cluster Session ...")
+                // logger.warn("Cluster Session ...")
                 // val spark = SparkSession
                 //     .builder()
                 //     .appName(name="HelloSpark")
@@ -45,7 +45,7 @@ object SparkCommon {
                 //     .getOrCreate()
             // }
 
-            logger.info("createSparkSession ended ...")
+            logger.warn("createSparkSession ended ...")
 
             Some(spark)
 
@@ -62,30 +62,30 @@ object SparkCommon {
 
     def createHiveTable (spark : SparkSession) : Unit = {
 
-        logger.info("createHiveTable started ...")
+        logger.warn("createHiveTable started ...")
         
         spark.sql("create database if not exists newdb")
         spark.sql("create table if not exists newdb.newtable(course_id string, course_name string, author_name string, no_of_reviews string)")
         
         spark.sql("insert into newdb.newtable values (1,'Java','FutureX',45)")
         spark.sql("insert into newdb.newtable VALUES (2,'Java','FutureXSkill',56)")
-        spark.sql("insert into newdb.newtable VALUES (3,'Big Data','Future',100)")
-        spark.sql("insert into newdb.newtable VALUES (4,'Linux','Future',100)")
+        spark.sql("insert into newdb.newtable VALUES (3,'Big Data','',100)")
+        spark.sql("insert into newdb.newtable VALUES (4,'Linux','Future','')")
         spark.sql("insert into newdb.newtable VALUES (5,'Microservices','Future',100)")
         spark.sql("insert into newdb.newtable VALUES (6,'CMS','',100)")
 
         spark.sql("alter table newdb.newtable set tblproperties('serialization.null.format'='')")
 
-        logger.info("createHiveTable ended ...")
+        logger.warn("createHiveTable ended ...")
     }
 
     def readHiveTable(spark : SparkSession) : Option[DataFrame] = {
         try {
-            logger.info("readHiveTable started ...")
+            logger.warn("readHiveTable started ...")
 
             val courseDF = spark.sql("select * from newdb.newtable")
 
-            logger.info("readHiveTable ended ...")
+            logger.warn("readHiveTable ended ...")
 
             Some(courseDF)
         } catch {

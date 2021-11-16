@@ -1,0 +1,15 @@
+{
+  "header": {
+    "created_by": "someone",
+    "created_date": "20211116"
+  },
+  "body": {
+    "pg_target_table": "newschema.newtable",
+    "replace_null_value": {
+      "course_id": "NO",
+      "course_name": "NO",
+      "author_name": "YES",
+      "no_of_reviews": "NO"
+    }
+  }
+}

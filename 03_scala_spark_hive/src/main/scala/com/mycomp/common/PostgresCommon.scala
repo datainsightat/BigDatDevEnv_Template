@@ -1,7 +1,7 @@
 package common
 
 import java.util.Properties
-import org.apache.spark.sql.{DataFrame,SparkSession}
+import org.apache.spark.sql.{DataFrame,SaveMode,SparkSession}
 import org.slf4j.LoggerFactory
 
 object PostgresCommon {
@@ -10,17 +10,17 @@ object PostgresCommon {
 
     def getPostgresCommonProps(): Properties = {
 
-        logger.info("getPostgresCommonProps started ...")
+        logger.warn("getPostgresCommonProps started ...")
 
         // Connect to PostgreSQL
         // Checkout 'README_SETUP_POSTGRES.md' to setup the database properly
-        logger.info("Create Dataframe from Postgres DB ...")
+        logger.warn("Create Dataframe from Postgres DB ...")
 
         val pgConnectionProperties = new Properties()
         pgConnectionProperties.put("user","root")
         pgConnectionProperties.put("password","root")
 
-        logger.info("getPostgresCommonProps ended ...")
+        logger.warn("getPostgresCommonProps ended ...")
 
         pgConnectionProperties
 
@@ -35,12 +35,12 @@ object PostgresCommon {
 
         try {
 
-            logger.info("fetchDataFrameFromPgTable started ...")
+            logger.warn("fetchDataFrameFromPgTable started ...")
 
             // This connection requires an active postgresql container named 'pg_container'
             val pgCourseDataframe = spark.read.jdbc(url=getPostgresServerDatabase(),pgTable,getPostgresCommonProps())
 
-            logger.info("fetchDataFrameFromPgTable ended ...")
+            logger.warn("fetchDataFrameFromPgTable ended ...")
 
             Some(pgCourseDataframe)
 
@@ -52,5 +52,25 @@ object PostgresCommon {
                 None
         }
 
+    }
+
+    def writeDFToPostgresTable(dataFrame: DataFrame, pgTable : String): Unit = {
+        try {
+            logger.warn("writeDFToPostgresTable method started ....")
+
+            dataFrame.write
+                .mode(SaveMode.Append)
+                .format("jdbc")
+                .option("url",getPostgresServerDatabase())
+                .option("dbtable",pgTable)
+                .option("user","root")
+                .option("password","root")
+                .save()
+
+            logger.warn("writeDFToPostgresTable method ended ....")
+        } catch {
+            case e: Exception =>
+                logger.error("An error occured in writeDFToPostgreTabls " + e.printStackTrace())
+        }
     }
 }

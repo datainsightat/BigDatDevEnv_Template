@@ -8,7 +8,7 @@
 
 package com.mycomp
 
-import common.{SparkCommon,PostgresCommon}
+import common.{SparkCommon,PostgresCommon,SparkTransformer,JsonParser}
 import org.apache.spark.sql.{DataFrame,SaveMode,SparkSession}
 import org.slf4j.LoggerFactory
 
@@ -23,7 +23,7 @@ object Scala_Spark_Hive {
 
         try{
 
-            logger.info("main method started ...")
+            logger.warn("main method started ...")
 
             //Create spark session
             val spark : SparkSession = SparkCommon.createSparkSession(true).get
@@ -35,11 +35,18 @@ object Scala_Spark_Hive {
             val courseDF = SparkCommon.readHiveTable(spark).get
             courseDF.show()
 
-            // val pgTable = "newschema.newtable"
+            //Replace Null Value
+            val transformedDF1 = SparkTransformer.replaceNullValues(courseDF)
+            transformedDF1.show()
 
-            // val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgTable).get
+            //val pgCourseTable = "newschema.newtable"
+            val pgCourseTable = JsonParser.fetchPGTargetTable()
 
-            // logger.info("main method ended ...")
+            logger.warn("**** pgCourseTable *** is ", pgCourseTable)
+
+            // val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgCourseTable).get
+
+            // logger.warn("main method ended ...")
             
             // pgCourseDataframe.show()
 

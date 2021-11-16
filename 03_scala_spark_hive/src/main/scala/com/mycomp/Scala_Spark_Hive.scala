@@ -9,7 +9,7 @@
 package com.mycomp
 
 import common.{SparkCommon,PostgresCommon}
-import org.apache.spark.sql.{SaveMode,SparkSession}
+import org.apache.spark.sql.{DataFrame,SaveMode,SparkSession}
 import org.slf4j.LoggerFactory
 
 /**
@@ -25,15 +25,23 @@ object Scala_Spark_Hive {
 
             logger.info("main method started ...")
 
+            //Create spark session
             val spark : SparkSession = SparkCommon.createSparkSession(true).get
 
-            val pgTable = "newschema.newtable"
+            //Create hive table
+            //SparkCommon.createHiveTable(spark)
 
-            val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgTable).get
+            //Read hive table
+            val courseDF = SparkCommon.readHiveTable(spark).get
+            courseDF.show()
 
-            logger.info("main method ended ...")
+            // val pgTable = "newschema.newtable"
+
+            // val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgTable).get
+
+            // logger.info("main method ended ...")
             
-            pgCourseDataframe.show()
+            // pgCourseDataframe.show()
 
         } catch {
 

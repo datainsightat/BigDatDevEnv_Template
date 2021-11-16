@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Tue Nov 16 11:24:05 UTC 2021:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-017d-287d-62f7-000011efdda0 
-on database directory /home/project/scala_examples/03_scala_spark_hive/metastore_db with class loader java.net.URLClassLoader@3b576ee3 
+Tue Nov 16 13:39:36 UTC 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-017d-28f9-73fb-000010f6b150 
+on database directory /home/project/scala_examples/03_scala_spark_hive/metastore_db with class loader java.net.URLClassLoader@6eab92f3 
 Loaded from file:/root/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Ubuntu
 java.runtime.version=11.0.11+9-Ubuntu-0ubuntu2.18.04

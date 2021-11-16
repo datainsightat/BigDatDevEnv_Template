@@ -8,7 +8,7 @@
 
 package com.mycomp
 
-import common.{SparkCommon,PostgresCommon,SparkTransformer,JsonParser}
+import common.{InputConfig,SparkCommon,PostgresCommon,SparkTransformer,JsonParser}
 import org.apache.spark.sql.{DataFrame,SaveMode,SparkSession}
 import org.slf4j.LoggerFactory
 
@@ -25,8 +25,21 @@ object Scala_Spark_Hive {
 
             logger.warn("main method started ...")
 
-            //Create spark session
-            val spark : SparkSession = SparkCommon.createSparkSession(true).get
+            //Check, if arguments where passed
+            val arg_length = args.length
+
+            if (arg_length == 0) {
+                logger.warn("No Argument passed")
+                System.exit(1)
+            }
+
+            //Get arguments
+            val inputConfig : InputConfig = InputConfig(env = args(0), targetDB = args(1))
+
+            //System.out.println(inputConfig)
+
+            //Create    spark session
+            val spark = SparkCommon.createSparkSession(inputConfig).get
 
             //Create hive table
             //SparkCommon.createHiveTable(spark)
@@ -39,12 +52,20 @@ object Scala_Spark_Hive {
             val transformedDF1 = SparkTransformer.replaceNullValues(courseDF)
             transformedDF1.show()
 
-            //val pgCourseTable = "newschema.newtable"
-            val pgCourseTable = JsonParser.fetchPGTargetTable()
+            if (inputConfig.targetDB == "pg") {
+                logger.warn("Writing to PG table")
 
-            logger.warn("**** pgCourseTable *** is ", pgCourseTable)
+                //Writing to Postgres Table
+                val pgCourseTable = JsonParser.fetchPGTargetTable()
+                logger.warn(s"**** pgCourseTable **** is $pgCourseTable")
+                PostgresCommon.writeDFToPostgresTable(transformedDF1,pgCourseTable)
+            } else if (inputConfig.targetDB == "hive") {
+                logger.info("Writing to Hive Table ...")
 
-            PostgresCommon.writeDFToPostgresTable(transformedDF1,pgCourseTable)
+                //Writing to Hive Table
+                SparkCommon.writeToHiveTable(spark,transformedDF1,"customer_transformed")
+                logger.info("Finished writing to Hive Table ...")
+            }            
 
             // val pgCourseDataframe = PostgresCommon.fetchDataFrameFromPgTable(spark, pgCourseTable).get
 

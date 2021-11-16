@@ -7,47 +7,52 @@ object SparkCommon {
 
     private val logger = LoggerFactory.getLogger(getClass.getName)
 
-    def createSparkSession(sparkLocal : Boolean): Option[SparkSession] = {
+    def createSparkSession(inputConfig : InputConfig): Option[SparkSession] = {
 
         try {
 
             logger.warn("createSparkSession started ...")
-            
-            // Set Hadoop Home Directory
-            System.setProperty("hadoop.home.dir","")
-            //.config("spark.sql.warehouse.dir",warehouseLocation).enableHiveSupport()
 
-            // Create Spark Session
-            // if (sparkLocal) {
+            //logger.warn("Spark environment is ",inputConfig.env)
+            
+            if (inputConfig.env == "dev")  {
+                
+                // Set Hadoop Home Directory
+                System.setProperty("hadoop.home.dir","")
+                //.config("spark.sql.warehouse.dir",warehouseLocation).enableHiveSupport()
+
                 logger.warn("Local Session ...")
-                val spark = SparkSession
+
+                var spark = SparkSession
                     .builder
                     .appName(name="HelloSpark")
                     .config("spark.master","local")
                     .enableHiveSupport()
                     .getOrCreate()
 
-            // } else {
-                // logger.warn("Cluster Session ...")
-                // val spark = SparkSession
-                //     .builder()
-                //     .appName(name="HelloSpark")
-                //     .master("spark://spark:7077")
-                //     //.config("spark://spark-master:7077","local")
-                //     .config("spark.executor.memory", "512m")
-                //     .config("spark.cores.max", "1")
-                //     //.config("spark.sql.warehouse.dir","/user/hive/warehouse")
-                //     .config("spark.dynamicAllocation.enabled","false")
-                //     //.config("spark.shuffle.service.enabled","false")
-                //     .config("spark.submit.deployMode","cluster")
-                //     //.config("spark.driver.host", "theia")
-                //     //.enableHiveSupport()
-                //     .getOrCreate()
-            // }
+                Some(spark)
 
-            logger.warn("createSparkSession ended ...")
+            } else {
 
-            Some(spark)
+                logger.warn("Cluster Session ...")
+
+                var spark = SparkSession
+                    .builder()
+                    .appName(name="HelloSpark")
+                    .master("spark://spark:7077")
+                    //.config("spark://spark-master:7077","local")
+                    .config("spark.executor.memory", "512m")
+                    .config("spark.cores.max", "1")
+                    //.config("spark.sql.warehouse.dir","/user/hive/warehouse")
+                    .config("spark.dynamicAllocation.enabled","false")
+                    //.config("spark.shuffle.service.enabled","false")
+                    .config("spark.submit.deployMode","cluster")
+                    //.config("spark.driver.host", "theia")
+                    //.enableHiveSupport()
+                    .getOrCreate()
+
+                Some(spark)
+            }
 
         } catch {
 
@@ -92,6 +97,20 @@ object SparkCommon {
             case e: Exception =>
                 logger.error("Error Reading newdb.newtable "+e.printStackTrace())
                 None
+        }
+    }
+
+    def writeToHiveTable(spark : SparkSession, df : DataFrame, hiveTable : String): Unit = {
+        try {
+            logger.warn("writeToHiveTable started ...")
+            val tmpView = hiveTable+"tempView"
+            df.createOrReplaceTempView(tmpView)
+            val sqlQuery = "create table if not exists " + hiveTable + " as select * from " + tmpView
+            spark.sql(sqlQuery)
+            logger.warn("Finished writing to Hive Table")
+        } catch {
+            case e: Exception =>
+                logger.error("Error writing to Hive Table " + e.printStackTrace())
         }
     }
  }

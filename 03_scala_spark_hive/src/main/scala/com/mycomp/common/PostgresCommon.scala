@@ -37,8 +37,13 @@ object PostgresCommon {
 
             logger.warn("fetchDataFrameFromPgTable started ...")
 
+            val pgProp = getPostgresCommonProps
+            val pgURLdetails  = getPostgresServerDatabase()
+
+            logger.info("Creating Dataframe from Postgres")
+
             // This connection requires an active postgresql container named 'pg_container'
-            val pgCourseDataframe = spark.read.jdbc(url=getPostgresServerDatabase(),pgTable,getPostgresCommonProps())
+            val pgCourseDataframe = spark.read.jdbc(pgURLdetails,pgTable,pgProp)
 
             logger.warn("fetchDataFrameFromPgTable ended ...")
 

@@ -31,7 +31,7 @@ class Persist:
 
             raise Exception(exp)
 
-    def write_to_pg(self,pg_table):
+    def write_to_pg(self,pipline_config):
 
         logger = logging.getLogger("Persist")
 
@@ -41,7 +41,7 @@ class Persist:
         
         cursor = connection.cursor()
 
-        sql_query = "insert into " + pg_table + "(course_id,course_name,author_name,no_of_reviews) values (%s,%s,%s,%s)"
+        sql_query = "insert into " + pipline_config.get("COURSES","PG_TABLE") + "(course_id,course_name,author_name,no_of_reviews) values (%s,%s,%s,%s)"
         insert_tuple = (13,"Machine Learning","new Author",5)
 
         cursor.execute(sql_query,insert_tuple)
@@ -52,7 +52,7 @@ class Persist:
 
         return 0
 
-    def write_to_pg_jdbc(self,df,pg_table):
+    def write_to_pg_jdbc(self,df,pipline_config):
 
         logger = logging.getLogger("Persist")
 
@@ -63,8 +63,8 @@ class Persist:
             df.coalesce(1).write \
                 .mode("append") \
                 .format("jdbc") \
-                .option("url","jdbc:postgresql://pg_container:5432/newdb") \
-                .option("dbtable",pg_table) \
+                .option("url",pipline_config.get("DB_CONFIGS","PG_URL")) \
+                .option("dbtable",pipline_config.get("BANK_PROSPECTS","PG_TABLE")) \
                 .option("user","root") \
                 .option("password","root") \
                 .save()

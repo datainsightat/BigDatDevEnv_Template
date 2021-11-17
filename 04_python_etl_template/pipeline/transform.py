@@ -26,10 +26,13 @@ class Transform:
         # customer_df.groupBy("gender").agg({"Salary":"avg","Age":"max"}).show()
         # customer_df.orderBy("Salary").show()
 
+        df_agg = df.agg({"Salary":"avg","Age":"avg"}).collect()
+
         #df1 = df.na.drop()
-        df1 = df.na.fill("Unknown", ["author_name"])
-        df2 = df1.na.fill("0", ["no_of_reviews"])
+        df1 = df.na.fill("Unknown", ["Country"])
+        df2 = df1.na.fill(str(int(round(df_agg[0][1],0))), ["Age"])
+        df3 = df2.na.fill(str(int(round(df_agg[0][0],0))), ["Salary"])
 
         logger.info("transform_data ended ...")
 
-        return df2
+        return df3

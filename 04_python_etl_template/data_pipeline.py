@@ -21,12 +21,13 @@ class Pipeline:
 
             logging.info("run_pipeline started ...")
 
-            pg_table = self.read_config_pg_table()
+            pipline_config = self.read_config()
 
             ingest_process = ingest.Ingest(self.spark)
             #df = ingest_process.read_from_csv()
-            #df = ingest_process.read_from_pg(pg_table)
-            df = ingest_process.read_from_pg_jdbc(pg_table)
+            #df = ingest_process.read_from_pg(pipline_config)
+            #df = ingest_process.read_from_pg_jdbc(pipline_config)
+            df = ingest_process.read_from_hdfs(pipline_config)
             df.show()
 
             transform_process = transform.Transform(self.spark)
@@ -35,8 +36,8 @@ class Pipeline:
             
             persist_process = persist.Persist(self.spark)
             #persist_process.write_to_hdfs_local(transformed_df)
-            #persist_process.write_to_pg(pg_table)
-            persist_process.write_to_pg_jdbc(transformed_df,pg_table)
+            #persist_process.write_to_pg(pipline_fonfig)
+            persist_process.write_to_pg_jdbc(transformed_df,pipline_config)
 
             logging.info("run_pipeline ended ...")
 
@@ -52,12 +53,19 @@ class Pipeline:
 
         logging.info("create_spark_session started ...")
 
+        pipline_config = self.read_config()
+
         self.spark = SparkSession\
             .builder\
             .appName("Python ETL")\
-            .config("spark.driver.extraClassPath","pipeline/postgresql-42.3.1.jar")\
+            .master(pipline_config.get("DB_CONFIGS","SPARK_MASTER")) \
+            .config("spark.executor.memory", "512m") \
+            .config("spark.cores.max", "1") \
+            .config("spark.driver.extraClassPath",pipline_config.get("DB_CONFIGS","JDBC_JAR"))\
             .enableHiveSupport()\
             .getOrCreate()
+
+                    #.master(pipline_config.get("DB_CONFIGS","SPARK_MASTER")) \
 
         logging.info("create_spark_session ended ...")
 
@@ -80,18 +88,16 @@ class Pipeline:
 
         logging.info("create_hive_table ended ...")
 
-    def read_config_pg_table(self):
+    def read_config(self):
 
-        logging.info("read_config_pg_table started ...")
+        logging.info("read_config started ...")
 
         config = configparser.ConfigParser()
         config.read("pipeline/resources/pipeline.ini")
-        target_table = config.get("DB_CONFIGS","TARGET_PG_TABLE")
-        logging.info("pg table is " + target_table)
 
-        logging.info("read_config_pg_table ended ...")
+        logging.info("read_config ended ...")
 
-        return target_table
+        return config
 
 if __name__ == '__main__':
 

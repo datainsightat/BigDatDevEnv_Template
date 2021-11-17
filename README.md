@@ -1,6 +1,8 @@
-# scala_examples
+# ETL Examples
 
-## Build Structure
+## Scala
+
+### Build Maven Structure
 
 Source: https://stackoverflow.com/questions/6758258/running-a-maven-scala-project
 
@@ -51,6 +53,8 @@ Source: https://stackoverflow.com/questions/6758258/running-a-maven-scala-projec
             </executions>
         </plugin>
 
+### Execute Scala Project
+
     $ mvn package exec:java
     $ mvn package
     $ java -jar target/test-1.0-SNAPSHOT.jar
@@ -58,3 +62,16 @@ Source: https://stackoverflow.com/questions/6758258/running-a-maven-scala-projec
 Execute Project with Arguments:
 
     $ mvn package exec:java -Dexec.args="dev|prod hive|pg"
+
+## Python
+
+### Create Python Environment
+
+    $ pip3 install virtualenv
+    $ virtualenv <yourenv>
+    $ source <yourenv> activate
+    $ deactivate
+
+### Deploy Spark Cluster
+
+    $ docker container exec spark spark-submit /opt/workspace/scala_examples/04_python_etl_emplate/data_pipline.py

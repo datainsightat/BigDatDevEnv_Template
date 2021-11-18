@@ -1,8 +1,11 @@
 .metals/
 .theia/
 00_Jupyter_Notebooks/.ipynb_checkpoints/
+01_scala_basics_maven/target/
+02_scala_basics_spark/target/
 03_scala_etl_template/metastore_db/
 03_scala_etl_template/samplesq/
+03_scala_etl_template/target/
 04_python_etl_template/metastore_db/
 04_python_etl_template/samplesq/
 04_python_etl_template/__pycache__/

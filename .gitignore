@@ -1,5 +1,6 @@
 .metals/
 .theia/
+00_Jupyter_Notebooks/.ipynb_checkpoints/
 03_scala_etl_template/metastore_db/
 03_scala_etl_template/samplesq/
 04_python_etl_template/metastore_db/

@@ -1,2 +1,7 @@
-/.metals
-/.theia
+.metals/
+.theia/
+03_scala_etl_template/metastore_db/
+03_scala_etl_template/samplesq/
+04_python_etl_template/metastore_db/
+04_python_etl_template/samplesq/
+04_python_etl_template/__pycache__/
